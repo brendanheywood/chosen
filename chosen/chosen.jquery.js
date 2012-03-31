@@ -103,11 +103,16 @@ Copyright (c) 2011 by Harvest
   AbstractChosen = (function() {
 
     function AbstractChosen(form_field, options) {
+      var _noop;
       this.form_field = form_field;
       this.options = options != null ? options : {};
       this.set_default_values();
       this.is_multiple = this.form_field.multiple;
       this.default_text_default = this.is_multiple ? "Select Some Options" : "Select an Option";
+      _noop = function(e) {
+        return e.html;
+      };
+      this.default_decorator = _noop;
       this.setup();
       this.set_up_html();
       this.register_observers();
@@ -300,6 +305,7 @@ Copyright (c) 2011 by Harvest
       this.container_id += "_chzn";
       this.f_width = this.form_field_jq.outerWidth();
       this.default_text = this.form_field_jq.data('placeholder') ? this.form_field_jq.data('placeholder') : this.default_text_default;
+      this.decorator = this.form_field_jq.data('decorator') ? window[this.form_field_jq.data('decorator')] : this.default_decorator;
       container_div = $("<div />", {
         id: this.container_id,
         "class": "chzn-container" + (this.is_rtl ? ' chzn-rtl' : ''),
@@ -495,6 +501,7 @@ Copyright (c) 2011 by Harvest
       _ref = this.results_data;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         data = _ref[_i];
+        data.decoratedHtml = this.decorator(data);
         if (data.group) {
           content += this.result_add_group(data);
         } else if (!data.empty) {
@@ -634,7 +641,7 @@ Copyright (c) 2011 by Harvest
         _this = this;
       choice_id = this.container_id + "_c_" + item.array_index;
       this.choices += 1;
-      this.search_container.before('<li class="search-choice" id="' + choice_id + '"><span>' + item.html + '</span><a href="javascript:void(0)" class="search-choice-close" rel="' + item.array_index + '"></a></li>');
+      this.search_container.before('<li class="search-choice" id="' + choice_id + '"><span>' + item.decoratedHtml + '</span><a href="javascript:void(0)" class="search-choice-close" rel="' + item.array_index + '"></a></li>');
       link = $('#' + choice_id).find("a").first();
       return link.click(function(evt) {
         return _this.choice_destroy_link_click(evt);

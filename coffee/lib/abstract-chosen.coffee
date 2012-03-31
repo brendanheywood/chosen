@@ -12,6 +12,9 @@ class AbstractChosen
     @is_multiple = @form_field.multiple
     @default_text_default = if @is_multiple then "Select Some Options" else "Select an Option"
 
+    _noop = (e) -> e.html
+    @default_decorator = _noop
+
     this.setup()
 
     this.set_up_html()

@@ -30,6 +30,7 @@ class Chosen extends AbstractChosen
     @f_width = @form_field_jq.outerWidth()
     
     @default_text = if @form_field_jq.data 'placeholder' then @form_field_jq.data 'placeholder' else @default_text_default
+    @decorator    = if @form_field_jq.data 'decorator'   then window[ @form_field_jq.data 'decorator']   else @default_decorator
     
     container_div = ($ "<div />", {
       id: @container_id
@@ -180,6 +181,7 @@ class Chosen extends AbstractChosen
 
     content = ''
     for data in @results_data
+      data.decoratedHtml = @decorator data
       if data.group
         content += this.result_add_group data
       else if !data.empty
@@ -291,7 +293,7 @@ class Chosen extends AbstractChosen
   choice_build: (item) ->
     choice_id = @container_id + "_c_" + item.array_index
     @choices += 1
-    @search_container.before  '<li class="search-choice" id="' + choice_id + '"><span>' + item.html + '</span><a href="javascript:void(0)" class="search-choice-close" rel="' + item.array_index + '"></a></li>'
+    @search_container.before  '<li class="search-choice" id="' + choice_id + '"><span>' + item.decoratedHtml + '</span><a href="javascript:void(0)" class="search-choice-close" rel="' + item.array_index + '"></a></li>'
     link = $('#' + choice_id).find("a").first()
     link.click (evt) => this.choice_destroy_link_click(evt)
 
