@@ -737,7 +737,7 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.winnow_results = function() {
-      var found, option, part, parts, regex, regexAnchor, result, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len2, _ref;
+      var decoratedResult, found, option, part, parts, regex, regexAnchor, result, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len2, _ref;
       this.no_results_clear();
       results = 0;
       searchText = this.search_field.val() === this.default_text ? "" : $('<div/>').text($.trim(this.search_field.val())).html();
@@ -777,7 +777,9 @@ Copyright (c) 2011 by Harvest
               } else {
                 text = option.html;
               }
-              result.html(text);
+              decoratedResult = option.decoratedHtml;
+              decoratedResult.replace(option.html, text);
+              result.html(decoratedResult);
               this.result_activate(result);
               if (option.group_array_index != null) {
                 $("#" + this.results_data[option.group_array_index].dom_id).css('display', 'list-item');
